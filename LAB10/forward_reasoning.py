@@ -12,7 +12,6 @@ def getPredicates(string):
     expr = '([a-z~]+)\([^&|]+\)'
     return re.findall(expr, string)
 
-# %% [code]
 class Fact:
     def __init__(self, expression):
         self.expression = expression
@@ -39,7 +38,7 @@ class Fact:
         c = constants.copy()
         f = f"{self.predicate}({','.join([constants.pop(0) if isVariable(p) else p for p in self.params])})"
         return Fact(f)
-    
+
 class Implication:
     def __init__(self, expression):
         self.expression = expression
@@ -93,24 +92,18 @@ class KB:
         for i, f in enumerate(set([f.expression for f in self.facts])):
             print(f'\t{i+1}. {f}')
 
+def main():
+    kb = KB()
+    print("Enter KB: (enter e to exit)")
+    while True:
+        t = input()
+        if(t == 'e'):
+            break
+        kb.tell(t)
+    print("Enter Query:")
+    q = input()
+    kb.query(q)
+    kb.display()
+    
 
-# %% [code]
-kb = KB()
-kb.tell('missile(x)=>weapon(x)')
-kb.tell('missile(M1)')
-kb.tell('enemy(x,America)=>hostile(x)')
-kb.tell('american(West)')
-kb.tell('enemy(Nono,America)')
-kb.tell('owns(Nono,M1)')
-kb.tell('missile(x)&owns(Nono,x)=>sells(West,x,Nono)')
-kb.tell('american(x)&weapon(y)&sells(x,y,z)&hostile(z)=>criminal(x)')
-kb.query('criminal(x)')
-kb.display()
-
-# %% [code]
-kb_ = KB()
-kb_.tell('king(x)&greedy(x)=>evil(x)')
-kb_.tell('king(John)')
-kb_.tell('greedy(John)')
-kb_.tell('king(Richard)')
-kb_.query('evil(x)')
+main()
